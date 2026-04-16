@@ -1,2 +1,0 @@
-# fish
-Tutorial de Fish

@@ -1,0 +1,157 @@
+#+title: Empezando Fish
+#+author: hlimon@uv.mx
+
+* Introducción
+- https://fishshell.com/
+- System shell
+- Mejor que Bash para trabajo interactivo
+- La idea es tener un shell que simplemente funciona sin necesidad de
+  conocer detalles arcanos o instalar plugins
+- Características avanzadas:
+  + Resaltado sintáctico 
+  + Sugerencias para autompletado
+  + Autocompletado con tab
+- Si vienes de Bash muchas cosas son similares:
+  + Encadenamiento de comandos
+  + Redirecciones de flujo
+  + Wildcards (globbing)
+  + Sustituciones de comandos
+- Aunque otras cosas son diferentes:
+  + Manejo de variables
+  + Sentencias de control
+  + Spliting de palabras
+
+* Instalación
+
+  #+begin_src bash :session *bash* :results output :exports both :tangle /tmp/test.sh
+    apt install fish # debian-like
+    pacman -S fish # arch-like
+    dnf install fish # fedora-like
+    # etc.
+
+  #+end_src
+
+- Tu archivo de configuración debería estar en =~/.config/fish/config.fish=
+
+** Entrar a fish 
+  #+begin_src bash :session *bash* :results output :exports both :tangle /tmp/test.sh
+    # Desde cualquier otro shell
+    fish
+  #+end_src
+
+** Hacer que fish sea tu shell por defecto
+  #+begin_src bash :session *bash* :results output :exports both :tangle /tmp/test.sh
+    whereis fish # ver ruta del shell
+    chsh -s /path/to/fish # probablemente /usr/bin/fish
+    # también podrías directamente editar /etc/passwd
+    
+  #+end_src
+* Resaltado sintáctico
+- Fish interpreta mientras escribes
+- Te señala errores como:
+  + Comandos que no existen
+  + Referencias a archivos que no existen
+  + Mal uso de redirecciones de flujo
+  + Paréntesis que no coinciden
+
+* Autocompletado y sugerencias
+- Basado en historial de comandos
+- Rutas
+- Directorio actual
+- Autocompletar sugerencia actual: =→= o =ctrl-f=
+- Autocompletar de forma parcial: =alt-f=
+- Autocompletar de forma parcial con sugerencias: =tab=
+  + Se puede hacer una búsqueda sobre las sugerencias =ctrl-s=
+  + Muchos comandos comunes tienen autompletado especial con tab
+- Ciclar sugerencia: =⭡= o =⭣=  
+
+* Keybindings útiles
+- =ctrl-l= limpiar pantalla
+- =ctrl-a= ir al inicio de la línea
+- =ctrl-e= ir al final de la línea
+- =ctrl →= moverse una palabra hacia adelante
+- =ctrl-k= Cortar la línea a partir del cursor
+- =ctrl-backspace= borra una palabra
+- =ctrl-z= deshacer último cambio
+- =ctrl-shift-z= redo
+- =alt-l= lista contenido del directorio actual (similar a comando=ls=)
+  + Si se escribe un directorio lista los archivos de ese directorio
+- =alt-p= preparar una salida para ser paginada
+- =alt-w= descripción corta del comando
+- =alt-s=   agrega sudo al inicio
+- =alt-d= ver directorios visitados (sólo si la línea está vacía):
+
+* Navegación
+- Fish lleva un historial de los directorios visitados mediante cd
+- Provee comandos de navegación basados en dicho historial
+- =dirh= igual a =alt-d=
+- =cdh= navegar por el historial a partir de un prompt
+- =prevd= o =alt-left= moverse hacía atrás por los historial de directorios
+- =nextd= o =alt-right= moverse hacía adelante por los historial de directorios
+
+* Variables
+    #+begin_src bash :session *bash* :results output :exports both :tangle /tmp/test.sh
+      set var valor
+      echo $var
+      set var $(pwd) # como en bash
+      # También se puede sin el $
+      set var (pwd)
+      # no hay tanto problema con el spliting
+      set var hola mundo
+      echo $var # hola mundo
+      # aun así es mejor : 
+      set var "hola mundo"
+      # exportar variables al entorno
+      set -x var valor
+      # desexportar
+      set -u var
+      # código de retorno $? en bash
+      echo $status
+      # variables universales: perduran y afectan a todos tus shells
+      set -U EDITOR emacs
+
+  #+end_src
+
+* No sé hacer X con Fish pero si con Bash
+    #+begin_src bash :session *bash* :results output :exports both :tangle /tmp/test.sh
+      bash -c 'código bash'
+      # o de plano has algo en bash y luego regresa:
+      bash
+      # cosas de bash
+      exit 
+
+  #+end_src
+
+* Shell pimping
+
+- Fish cuenta con temas por defecto:
+    #+begin_src bash :session *bash* :results output :exports both :tangle /tmp/test.sh
+      fish_config theme show      
+      fish_config theme choose default      
+  #+end_src
+
+- Para algo más avanzado y que no requiere mucha configuración se
+  puede usar =starship=
+    #+begin_src bash :session *bash* :results output :exports both :tangle /tmp/test.sh
+      curl -sS https://starship.rs/install.sh | sh
+      # o ver si hay un paquete en tu distro
+
+      # al final de tu ~/.config/fish/config.fish agregar
+      starship init fish | source
+      # puedes modificar ~/.config/starship.toml
+
+  #+end_src
+
+- Sugerido:
+  + Usa fuentes monoespaciadas
+  + Instala fuentes con iconos (nerdfonts)
+
+* Showoff integración con Emacs
+- Abrir/ir terminal
+- Crear nueva terminal nombrada
+- Abrir editor de directorios desde directorio actual de la terminal
+- Búsqueda de historial más avanzada
+- Ir al inicio/final de la salida de un comando
+- Activar modo selección
+- Insertar rutas
+- Copiar/pegar con tips visuales
